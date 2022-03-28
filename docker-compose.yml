@@ -1,0 +1,85 @@
+version: '3.8'
+
+services:
+  # https-portal:
+  #   container_name: ${SERVICE_NAME}_https_portal_${SERVICE_TYPE}
+  #   image: steveltn/https-portal:1
+  #   ports:
+  #     - ${FRONT_HTTP_PORT}:80
+  #     - ${FRONT_HTTPS_PORT}:443
+  #   # restart: always
+  #   environment:
+  #     STAGE: local
+  #     DOMAINS: 'localhost -> http://front'
+
+  # front:
+  #   container_name: ${SERVICE_NAME}_front_${SERVICE_TYPE}
+  #   image: nginx
+  #   working_dir: /app
+  #   # restart: always
+  #   volumes:
+  #     - ./src/front/dist:/var/www/html
+  #     - ./src/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+  api:
+    container_name: ${SERVICE_NAME}_api_${SERVICE_TYPE}
+    build: ./src/api
+    working_dir: /app
+    ports:
+      - ${API_PORT}:8000
+    command: sh main.sh
+    volumes:
+      - ./src/api/src:/app
+    # depends_on:
+    #   - celery
+    #   - flower
+  celery:
+    container_name: ${SERVICE_NAME}_celery_${SERVICE_TYPE}
+    build: ./src/celery
+    command: celery --app=tasks worker --loglevel=info
+    environment:
+      - BROKER_URL=redis://redis:6379/0
+      - RESULT_BACKEND=redis://redis:6379/1
+    # depends_on:
+    #   - redis
+  # flower:
+  #   build:
+  #     context: ./celery-app
+  #     dockerfile: worker.dockerfile
+  #   depends_on:
+  #     - redis
+  #   command:
+  #     - celery
+  #     - --app=tasks.celery
+  #     - flower
+  #     - --port=5555
+  #   ports:
+  #     - 5556:5555
+  # flower:
+  #   container_name: ${SERVICE_NAME}_flower_${SERVICE_TYPE}
+  #   image: mher/flower:0.9.7
+  #   # build: ./src/celery
+  #   command: ['flower', '--broker=redis://redis:6379/0', '--port=5555']
+  #   # command: celery flower --broker=redis://redis:6379/0 --address="0.0.0.0" --port=5555
+  #   # # command: celery --app=tasks flower --port=5555
+  #   # environment:
+  #   #   - CELERY_BROKER_URL=redis://redis:6379/0
+  #   #   - CELERY_BACKEND_URL=redis://redis:6379/1
+  #   ports:
+  #     - "5555:5555"
+  #   depends_on:
+  #     - redis
+
+  redis:
+    container_name: ${SERVICE_NAME}_redis_${SERVICE_TYPE}
+    image: redis:latest
+    volumes:
+      - redis_db:/data
+
+volumes:
+  redis_db:
+    driver: local
+
+networks:
+  default:
+    external:
+      name: ${SERVICE_NAME}_${SERVICE_TYPE}

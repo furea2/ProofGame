@@ -1,0 +1,6 @@
+uvicorn
+gunicorn
+fastapi
+pydantic
+celery
+redis

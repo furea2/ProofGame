@@ -1,0 +1,2 @@
+src/sample.lean:8:4: warning: declaration uses 'sorry'
+src/sample.lean:9:4: error: no goals to be solved

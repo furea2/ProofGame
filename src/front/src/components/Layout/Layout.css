@@ -1,0 +1,14 @@
+/* .fp-wrapper {
+    top: 42px;
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+} */
+/* .sidebar {
+    top: 42px;
+} */
+.fp-panel-main {
+    padding-top: 42px;
+    padding-right: 150px;
+    /* width: 70%; */
+}
