@@ -9,8 +9,8 @@ from celery import Celery
 #     return bmi
 
 
-CELERY_BROKER_URL = os.getenv("REDISSERVER", "redis://redis:6379/0")
-CELERY_BACKEND_URL = os.getenv("REDISSERVER", "redis://redis:6379/1")
+CELERY_BROKER_URL = os.getenv("REDISSERVER", "amqp://guest:guest@rabbitmq:5672/0")
+CELERY_BACKEND_URL = os.getenv("REDISSERVER", "redis://redis:6379/0")
 
 celery = Celery("celery", backend=CELERY_BROKER_URL, broker=CELERY_BACKEND_URL)
 # celery.conf.update(result_expires=3600)
