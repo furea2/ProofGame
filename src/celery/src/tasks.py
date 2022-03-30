@@ -25,13 +25,3 @@ def hello_world(self, name):
                 'exc_message': traceback.format_exc().split('\n')
             })
         raise ex
-
-@celery.task(name='tasks.calc_bmi')
-def calc_bmi(weight: float, height: float) -> float:
-    sleep(3)
-    bmi = weight / height**2
-    return bmi
-
-@celery.task(name='tasks.add')
-def add(x, y):
-    return x + y

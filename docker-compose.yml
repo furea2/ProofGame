@@ -29,25 +29,28 @@ services:
     command: sh main.sh
     volumes:
       - ./src/api/src:/app
-    # depends_on:
-    #   - celery
-    #   - flower
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_BACKEND_URL=redis://redis:6379/1
+
   celery:
     container_name: ${SERVICE_NAME}_celery_${SERVICE_TYPE}
     build: ./src/celery
     command: celery --app=tasks worker --loglevel=info
+    volumes:
+      - ./src/celery/src:/app
     environment:
-      - BROKER_URL=amqp://guest:guest@rabbitmq:5672/0
-      - RESULT_BACKEND=redis://redis:6379/0
-  flower:
-    container_name: ${SERVICE_NAME}_flower_${SERVICE_TYPE}
-    build: ./src/celery
-    command: celery --app=tasks flower --loglevel=info
-    environment:
-      - BROKER_URL=amqp://guest:guest@rabbitmq:5672/0
-      - RESULT_BACKEND=redis://redis:6379/0
-    ports:
-      - "5555:5555"
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_BACKEND_URL=redis://redis:6379/1
+  # flower:
+  #   container_name: ${SERVICE_NAME}_flower_${SERVICE_TYPE}
+  #   build: ./src/celery
+  #   command: celery --app=tasks flower --loglevel=info
+  #   environment:
+  #     - BROKER_URL=amqp://guest:guest@rabbitmq:5672/0
+  #     - RESULT_BACKEND=redis://redis:6379/0
+  #   ports:
+  #     - "5555:5555"
 
   rabbitmq:
     container_name: ${SERVICE_NAME}_rabbitmq_${SERVICE_TYPE}
@@ -63,8 +66,6 @@ services:
       - redis_db:/data
 
 volumes:
-  redis_db:
-    driver: local
   redis_db:
     driver: local
 
