@@ -13,7 +13,6 @@ const MainContent = (props:any) => {
   const Auth = props.Auth;
 
   return (<>
-    <div className="fp-panel-main">
       <Container text>
         {/* <Header as='h2' dividing>
           Site
@@ -83,7 +82,6 @@ const MainContent = (props:any) => {
         </Button>
       </Container>
       <br/><br/><br/>
-    </div>
   </>);
 }
 

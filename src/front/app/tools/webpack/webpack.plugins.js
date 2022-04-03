@@ -16,6 +16,6 @@ module.exports = [
     chunkFilename: '[name].[chunkhash].chunk.css',
   }),
   new DotenvPlugin({
-    path: './../../.env',
+    path: './../../../.env',
   }),
 ];
