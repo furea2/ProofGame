@@ -8,6 +8,10 @@ $ alembic revision --autogenerate -m "Initial"
 $ alembic upgrade head
 ```
 
+3. マイグレーションされたことを alembic に登録
+```
+$ alembic stamp head
+```
 
 確認コマンド
 

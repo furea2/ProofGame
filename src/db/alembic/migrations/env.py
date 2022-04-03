@@ -16,8 +16,8 @@ if config.config_file_name is not None:
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-from app.models import User
-target_metadata = [User.metadata]
+from app.models import User, Problem
+target_metadata = [User.metadata, Problem.metadata]
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
