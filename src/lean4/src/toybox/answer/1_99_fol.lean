@@ -16,3 +16,15 @@ def Language.empty : Language := {
 instance : Inhabited Language := ⟨Language.empty⟩
 
 variable (L : Language.{u, v})
+
+
+
+
+def succ (n : Nat) : Nat := n + 1
+#check succ
+
+
+
+
+
+#eval Lean.versionString

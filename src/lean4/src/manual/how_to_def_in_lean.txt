@@ -1,0 +1,174 @@
+##### 変数の定義
+
+既存の型を持つ変数を定義
+
+構文
+```
+def 変数名 : 型 := 値
+```
+
+##### 定義
+
+```
+def n : Nat := 0
+#check n            -- Nat
+#eval n             -- 0
+```
+
+##### 型の定義
+
+構文
+```
+def 変数名 : Type := 値
+```
+
+例
+```
+def α : Type := Nat
+```
+
+このとき、αは"Nat"を値にもつ"型の変数"を演じる
+
+型の変数を考えたい例
+
+自然数のリストは以下で定義される
+```
+#check List Nat  -- Type
+```
+
+もちろん自然数以外のリストを考えても良い
+自然数に依らない一般の型を考えたいときに"型の変数"を用いる
+
+```
+def α : Type := Nat
+#check List α    -- Type
+```
+
+ではTypeの型はなんであろうか？
+
+```
+#check Type     -- Type 1
+#check Type 1   -- Type 2
+#check Type 2   -- Type 3
+```
+
+LeanによるとTypeの型はType 1である
+
+するとTypeの型はType 0と思うと良さそうである
+
+LeanではType 0は小さな集合のuniverseと見なす
+
+Type 1はType 0それ自体を元として持つ、ひとつ上の型である
+
+Type 2、Type 3も以下同様で、Type nは任意の自然数に対して定義される
+
+```
+#check Type
+#check Type 0
+```
+
+型を変数に取る関数の記述
+
+```
+#check List    -- Type u_1 → Type u_1
+```
+
+Listの型を見ると、Type → Typeでなく、Type u_1を変数にとっている
+
+```
+#check Prod    -- Type u_1 → Type u_2 → Type (max u_1 u_2)
+```
+
+Leanでははじめにuniverseを宣言することが出来る
+
+```
+universe u
+def F (α : Type u) : Type u := Prod α α
+#check F    -- Type u → Type u
+```
+
+また、universeを隠れ変数にすることも出来る
+
+隠れ変数にした場合、文脈から適当に整合をとって解釈される
+
+```
+def F.{u} (α : Type u) : Type u := Prod α α
+#check F    -- Type u → Type u
+```
+
+※上のようにuniverse以外に対しても、{}を含む定義をした場合は隠れ変数を引数に取ることが出来る
+
+
+
+## summary
+
+```
+
+def n : Nat := 0    -- def 変数名 : 型 := 値
+#check n            -- Nat
+#eval n             -- 0
+
+```
+
+##### 関数の表現
+
+Leanではfunまたはλで関数を表現することが出来る
+
+```
+#check fun (x : Nat) => x + 1   -- Nat → Nat
+#check λ (x : Nat) => x + 1     -- λ and fun mean the same thing
+```
+
+上のような書き方をした場合、そのまま関数として扱うことが可能である
+
+```
+#eval (λ x : Nat => x + 1) 2     -- 3
+```
+
+#evalで関数の評価を行う
+
+関数は通常のプログラミング言語のような書き方もできる
+下はいずれも同じものである
+
+```
+#check fun x : Nat => fun y : Bool => if not y then x + 1 else x + 2
+#check fun (x : Nat) (y : Bool) => if not y then x + 1 else x + 2
+#check fun x y => if not y then x + 1 else x + 2   -- Nat → Bool → Nat
+```
+
+```
+#eval (fun x y => if not y then x + 1 else x + 2) 2 true  -- 4
+```
+
+##### 関数の定義
+
+変数の定義の構文を思い出す
+
+構文
+```
+def 変数名 : 型 := 値
+```
+
+関数の場合は、引数を用いて以下のようにかける
+
+```
+def double (x : Nat) : Nat :=
+  x + x
+```
+
+引数を用いない方法でもかける
+
+```
+def double : Nat → Nat :=
+  fun x => x + x
+```
+
+Leanでは自動で型推論を行うシステムがある
+
+```
+def double :=
+  fun (x : Nat) => x + x
+#check double   -- Nat → Nat
+```
+
+
